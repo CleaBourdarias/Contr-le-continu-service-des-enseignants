@@ -64,10 +64,18 @@ public class ChampollionJUnitTest {
         
         @Test
         public void testEnSousService(){
-            untel.heuresPrevues() < 192){
-            assertTrue(untel.enSousService());
-            
+            int h = untel.heuresPrevues();
+            assertTrue(untel.enSousService());   
         }
+        
+        @Test
+        public void testNonEnSousService(){
+            untel.ajouteEnseignement(java,192,4,5);
+            int h = untel.heuresPrevues();
+            assertFalse(untel.enSousService());   
+        }
+        
+        
         
         
 
