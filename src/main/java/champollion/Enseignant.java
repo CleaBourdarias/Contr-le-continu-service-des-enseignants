@@ -1,11 +1,20 @@
 package champollion;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Enseignant extends Personne {
+
+    protected Set<ServicePrevu> listeServicesPrevus ;
+    protected Set<Intervention> listeIntervention;
 
     // TODO : rajouter les autres méthodes présentes dans le diagramme UML
 
     public Enseignant(String nom, String email) {
         super(nom, email);
+        listeServicesPrevus = new HashSet<>();
+        listeIntervention = new HashSet<>();
+
     }
 
     /**
@@ -18,7 +27,12 @@ public class Enseignant extends Personne {
      */
     public int heuresPrevues() {
         // TODO: Implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        //throw new UnsupportedOperationException("Pas encore implémenté");
+        double c = 0;
+        for (ServicePrevu sp : listeServicesPrevus){
+            c = c + sp.getVolumeTD() + 1.5*sp.getVolumeCM() + 0.75*sp.getVolumeTP();
+        }
+        return (int) c;
     }
 
     /**
@@ -32,7 +46,15 @@ public class Enseignant extends Personne {
      */
     public int heuresPrevuesPourUE(UE ue) {
         // TODO: Implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        //throw new UnsupportedOperationException("Pas encore implémenté");
+        
+        double c = 0;
+        for (ServicePrevu sp : listeServicesPrevus){
+            if (sp.UE.equals(ue)){
+                c = c + sp.getVolumeTD() + 1.5*sp.getVolumeCM() + 0.75*sp.getVolumeTP();
+            }
+        }
+        return (int) c;  
     }
 
     /**
@@ -45,7 +67,43 @@ public class Enseignant extends Personne {
      */
     public void ajouteEnseignement(UE ue, int volumeCM, int volumeTD, int volumeTP) {
         // TODO: Implémenter cette méthode
-        throw new UnsupportedOperationException("Pas encore implémenté");
+        ServicePrevu SV = new ServicePrevu(volumeCM,volumeTD,volumeTP, ue);
+        listeServicesPrevus.add(SV);
+        //throw new UnsupportedOperationException("Pas encore implémenté");
     }
-
+    
+    public void ajouterIntervention(Intervention i){
+        listeIntervention.add(i);
+    }
+    
+    public int resteAPlanifier(UE ue, TypeIntervention intervention){
+        int c1 = 0;
+        for (Intervention i : listeIntervention){
+            if (i.intervention == intervention){
+                c1++;
+            }
+        }
+        int c2 = 0;
+        for (ServicePrevu sp : listeServicesPrevus){
+            if (sp.UE.equals(ue) && intervention == TypeIntervention.CM){
+                c2 = sp.getVolumeCM();
+            }
+            if (sp.UE.equals(ue) && intervention == TypeIntervention.TD){
+                c2 = sp.getVolumeTD();
+            }
+            if (sp.UE.equals(ue) && intervention == TypeIntervention.TP){
+                c2 = sp.getVolumeTP();
+            }
+        }
+        return (c2-c1);
+        
+    }
+    
+    public boolean enSousService(){
+        if (this.heuresPrevues() < 192){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }
